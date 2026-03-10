@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vales Presentes 💝</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --rose:       #e8547a;
+      --rose-dark:  #c23b5e;
+      --gold:       #d4a847;
+      --gold-light: #f0cc6e;
+      --cream:      #fdf6f0;
+      --dark:       #2d1b2e;
+      --text-light: #7a5c6e;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a0a1e 0%, #2d0a1e 40%, #1a0a1e 100%);
+      font-family: 'Lato', sans-serif;
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ── Falling petals ── */
+    .petals-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .petal {
+      position: absolute;
+      top: -40px;
+      width: 12px;
+      height: 16px;
+      background: radial-gradient(ellipse at 40% 30%, #f9a8c9, #e8547a);
+      border-radius: 0 70% 70% 0;
+      opacity: 0;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0%   { transform: translateY(0) rotate(0deg) scale(1);   opacity: 0; }
+      5%   { opacity: 0.8; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(110vh) rotate(720deg) scale(0.4); opacity: 0; }
+    }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    header .subtitle {
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      font-size: 0.95rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 14px;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      color: #fff;
+      line-height: 1.15;
+    }
+
+    header h1 span {
+      color: var(--gold-light);
+    }
+
+    header p.tagline {
+      margin-top: 18px;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.65);
+      max-width: 480px;
+      margin-inline: auto;
+      line-height: 1.6;
+    }
+
+    /* ── Category labels ── */
+    .category-title {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--gold-light);
+      letter-spacing: 1px;
+      margin: 48px 20px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .category-title::before,
+    .category-title::after {
+      content: '';
+      flex: 1;
+      max-width: 120px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+
+    .category-title::after {
+      background: linear-gradient(to left, transparent, var(--gold));
+    }
+
+    /* ── Grid ── */
+    .grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 28px;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 16px 24px 60px;
+    }
+
+    /* ── Card wrapper (3-D perspective) ── */
+    .card-wrapper {
+      perspective: 1000px;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      padding-bottom: 62%;
+      transform-style: preserve-3d;
+      transition: transform 0.75s cubic-bezier(0.4, 0.2, 0.2, 1);
+      border-radius: 20px;
+    }
+
+    .card-wrapper.flipped .card {
+      transform: rotateY(180deg);
+    }
+
+    /* ── Card faces ── */
+    .card-front,
+    .card-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+    }
+
+    /* ── Front (mystery) ── */
+    .card-front {
+      background: linear-gradient(135deg, #6b2150 0%, #3d0d30 100%);
+      border: 1px solid rgba(212,168,71,0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .card-wrapper:hover:not(.flipped) .card-front {
+      box-shadow: 0 16px 48px rgba(232,84,122,0.4), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .card-wrapper:hover:not(.flipped) .card {
+      transform: translateY(-4px);
+    }
+
+    .card-front .envelope-icon {
+      font-size: 2.8rem;
+      line-height: 1;
+      filter: drop-shadow(0 2px 8px rgba(212,168,71,0.6));
+      transition: transform 0.4s;
+    }
+
+    .card-wrapper:hover:not(.flipped) .envelope-icon {
+      transform: scale(1.15) rotate(-5deg);
+    }
+
+    .card-front .front-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: #fff;
+      text-align: center;
+      padding: 0 20px;
+      line-height: 1.3;
+    }
+
+    .card-front .hint {
+      font-size: 0.72rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      opacity: 0.75;
+    }
+
+    /* Gold shimmer ribbon on front */
+    .card-front::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(105deg, transparent 40%, rgba(212,168,71,0.18) 50%, transparent 60%);
+      transform: skewX(-15deg);
+      transition: left 0.6s ease;
+    }
+
+    .card-wrapper:hover:not(.flipped) .card-front::after {
+      left: 130%;
+    }
+
+    /* Corner ornaments */
+    .card-front .corner {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-color: rgba(212,168,71,0.45);
+      border-style: solid;
+      border-width: 0;
+    }
+
+    .card-front .corner-tl { top: 12px; left: 12px; border-top-width: 2px; border-left-width: 2px; border-top-left-radius: 6px; }
+    .card-front .corner-tr { top: 12px; right: 12px; border-top-width: 2px; border-right-width: 2px; border-top-right-radius: 6px; }
+    .card-front .corner-bl { bottom: 12px; left: 12px; border-bottom-width: 2px; border-left-width: 2px; border-bottom-left-radius: 6px; }
+    .card-front .corner-br { bottom: 12px; right: 12px; border-bottom-width: 2px; border-right-width: 2px; border-bottom-right-radius: 6px; }
+
+    /* ── Back (revealed) ── */
+    .card-back {
+      transform: rotateY(180deg);
+      background: var(--cream);
+      border: 1px solid rgba(212,168,71,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      display: flex;
+      flex-direction: column;
+      padding: 22px 22px 18px;
+    }
+
+    .card-back .back-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .card-back .back-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .card-back .back-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--rose-dark);
+      line-height: 1.25;
+    }
+
+    .card-back .back-title span {
+      display: block;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2px;
+    }
+
+    .card-back .divider {
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin-bottom: 12px;
+    }
+
+    .card-back .back-description {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: var(--text-light);
+      flex: 1;
+    }
+
+    .card-back .back-footer {
+      margin-top: 14px;
+      text-align: right;
+      font-size: 0.65rem;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.75;
+    }
+
+    /* ── Stamp seal ── */
+    .seal {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 10px rgba(232,84,122,0.5);
+      border: 2px solid rgba(255,255,255,0.5);
+    }
+
+    /* ── Confetti burst ── */
+    .confetti-burst {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      animation: burst 0.9s ease-out forwards;
+    }
+
+    @keyframes burst {
+      0%   { transform: translate(0,0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0); opacity: 0; }
+    }
+
+    /* ── Counter badge ── */
+    .counter-wrap {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    .counter-badge {
+      display: inline-block;
+      background: rgba(212,168,71,0.15);
+      border: 1px solid rgba(212,168,71,0.35);
+      border-radius: 50px;
+      padding: 7px 22px;
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      letter-spacing: 1.5px;
+    }
+
+    .counter-badge strong {
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 0 20px 40px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1px;
+    }
+
+    /* ── Responsive tweaks – tablet ── */
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 16px 20px 48px;
+        gap: 20px;
+      }
+      .card { padding-bottom: 74%; }
+    }
+
+    /* ── Responsive tweaks – mobile ── */
+    @media (max-width: 600px) {
+      header {
+        padding: 36px 16px 24px;
+      }
+      header .subtitle {
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+      }
+      header p.tagline {
+        font-size: 0.88rem;
+        margin-top: 12px;
+      }
+      .category-title {
+        font-size: 0.9rem;
+        margin: 28px 16px 4px;
+        letter-spacing: 0.5px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 10px 16px 36px;
+      }
+      .card { padding-bottom: 100%; }
+      .card-front .envelope-icon { font-size: 2.2rem; }
+      .card-front .front-label   { font-size: 0.95rem; }
+      .card-front .hint          { font-size: 0.65rem; letter-spacing: 1.5px; }
+      .card-back {
+        padding: 16px 16px 52px 16px;
+      }
+      .card-back .back-icon  { font-size: 1.3rem; }
+      .card-back .back-title { font-size: 0.85rem; }
+      .card-back .back-title span { font-size: 0.6rem; letter-spacing: 2px; }
+      .card-back .back-description {
+        font-size: 0.78rem;
+        line-height: 1.6;
+      }
+      .card-back .back-footer {
+        font-size: 0.58rem;
+        margin-top: 6px;
+      }
+      .seal {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+        bottom: 10px;
+        right: 10px;
+      }
+      .counter-badge {
+        padding: 6px 16px;
+        font-size: 0.72rem;
+      }
+    }
+
+    /* ── Touch active states (replaces hover on touch devices) ── */
+    @media (hover: none) {
+      .card-wrapper:active:not(.flipped) .card-front {
+        box-shadow: 0 16px 48px rgba(232,84,122,0.4), inset 0 1px 0 rgba(255,255,255,0.12);
+      }
+      .card-wrapper:active:not(.flipped) .card {
+        transform: scale(0.97);
+      }
+      .card-wrapper:active:not(.flipped) .envelope-icon {
+        transform: scale(1.12) rotate(-5deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Petals -->
+  <div class="petals-container" id="petals"></div>
+
+  <!-- Header -->
+  <header>
+    <p class="subtitle">✦ Uma surpresa especial para ti ✦</p>
+    <h1>Vales <span>Presentes</span></h1>
+    <p class="tagline">Escolhe um envelope para revelar o teu vale. Cada um guarda um momento feito especialmente para ti. 💝</p>
+  </header>
+
+  <!-- Counter -->
+  <div class="counter-wrap">
+    <div class="counter-badge">
+      Revelados: <strong id="revealed">0</strong> / 9
+    </div>
+  </div>
+
+  <div class="grid" id="grid-1"></div>
+
+  <div class="grid" id="grid-2"></div>
+
+  <div class="grid" id="grid-3"></div>
+
+  <footer>feito com 💗 · apenas para ti</footer>
+
+  <script>
+    /* ─────────────── DATA ─────────────── */
+    const cards = [
+      {
+        grid: 1,
+        icon: '🛁',
+        category: 'Experiências & Relaxamento',
+        title: 'Vale Massagem Completa',
+        description: 'Um cupom para uma sessão de massagem feita por mim, com direito a óleo perfumado e música relaxante.',
+        seal: '✨'
+      },
+      {
+        grid: 1,
+        icon: '👨‍🍳',
+        category: 'Experiências & Relaxamento',
+        title: 'Vale "Chef"',
+        description: 'Eu preparo o teu prato favorito, incluindo pôr a mesa de forma especial e lavar a louça depois.',
+        seal: '🍽️'
+      },
+      {
+        grid: 1,
+        icon: '🎬',
+        category: 'Experiências & Relaxamento',
+        title: 'Vale Noite de Cinema em Casa',
+        description: 'Tu escolhe o filme (ou a série), e eu fico responsável pelas pipocas, snacks e por criar um ambiente aconchegante.',
+        seal: '🍿'
+      },
+      {
+        grid: 2,
+        icon: '🏳️',
+        category: 'Pequenos Gestos & Diversão',
+        title: 'Vale massagem emergencial',
+        description: 'Tu vais ter um dia difícil? Usa este vale para uma massagem rápida de 10 minutos, onde eu vou focar nas tuas áreas de tensão para aliviar o stress do dia.',
+        seal: '😏'
+      },
+      {
+        grid: 2,
+        icon: '🚗',
+        category: 'Pequenos Gestos & Diversão',
+        title: 'Vale Passeio Surpresa',
+        description: 'Um passeio de carro sem destino definido, onde tu escolhes a direção e eu vou tocar a nossa playlist favorita enquanto exploramos juntos.',
+        seal: '🌅'
+      },
+      {
+        grid: 2,
+        icon: '🗺️',
+        category: 'Pequenos Gestos & Diversão',
+        title: 'Vale Aventura Surpresa',
+        description: 'Uma caminhada por um lugar que ainda não conhecemos bem.',
+        seal: '🌿'
+      },
+      {
+        grid: 3,
+        icon: '🍰',
+        category: 'Gastronomia & Mimos',
+        title: 'Vale Sobremesa Surpresa',
+        description: 'Eu vou fazer uma sobremesa completamente diferente para, tu só vai escolher se é doce ou salgado.',
+        seal: '🍫'
+      },
+      {
+        grid: 3,
+        icon: '☀️',
+        category: 'Gastronomia & Mimos',
+        title: 'Vale Pequeno-Almoço na Cama',
+        description: 'Um clássico que nunca falha, especialmente num sábado ou domingo preguiçoso. Tu acordas e o pequeno-almoço já está pronto, servido com carinho diretamente para ti.',
+        seal: '🥐'
+      },
+      {
+        grid: 3,
+        icon: '🥂',
+        category: 'Gastronomia & Mimos',
+        title: 'Vale Jantar Fora no Lugar X',
+        description: 'Um vale para um jantar especial no restaurante que queiras muito visitar.',
+        seal: '🌹'
+      }
+    ];
+
+    let revealedCount = 0;
+
+    function buildCard(data, index) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'card-wrapper';
+      wrapper.dataset.index = index;
+
+      wrapper.innerHTML = `
+        <div class="card">
+          <!-- FRONT -->
+          <div class="card-front">
+            <div class="corner corner-tl"></div>
+            <div class="corner corner-tr"></div>
+            <div class="corner corner-bl"></div>
+            <div class="corner corner-br"></div>
+            <div class="envelope-icon">💌</div>
+            <div class="hint">toca para revelar</div>
+          </div>
+          <!-- BACK -->
+          <div class="card-back">
+            <div class="back-header">
+              <div class="back-icon">${data.icon}</div>
+              <div class="back-title">
+                <span>${data.category}</span>
+                ${data.title}
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="back-description">${data.description}</div>
+            <div class="back-footer">Vale Presente · 2026</div>
+          </div>
+        </div>
+      `;
+
+      wrapper.addEventListener('click', () => flipCard(wrapper));
+      return wrapper;
+    }
+
+    cards.forEach((data, i) => {
+      const grid = document.getElementById(`grid-${data.grid}`);
+      grid.appendChild(buildCard(data, i));
+    });
+
+    /* ─────────────── FLIP LOGIC ─────────────── */
+    function flipCard(wrapper) {
+      if (wrapper.classList.contains('flipped')) return;
+      wrapper.classList.add('flipped');
+      revealedCount++;
+      document.getElementById('revealed').textContent = revealedCount;
+
+      const rect = wrapper.getBoundingClientRect();
+      spawnConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
+
+    /* ─────────────── CONFETTI ─────────────── */
+    const confettiColors = ['#e8547a','#d4a847','#f9a8c9','#fff','#6b2150','#f0cc6e'];
+
+    function spawnConfetti(x, y) {
+      const burst = document.createElement('div');
+      burst.className = 'confetti-burst';
+      burst.style.left = x + 'px';
+      burst.style.top  = y + 'px';
+      document.body.appendChild(burst);
+
+      for (let i = 0; i < 22; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        const angle = Math.random() * 360;
+        const dist  = 60 + Math.random() * 80;
+        const tx = Math.cos(angle * Math.PI / 180) * dist;
+        const ty = Math.sin(angle * Math.PI / 180) * dist - 30;
+        piece.style.setProperty('--tx', tx + 'px');
+        piece.style.setProperty('--ty', ty + 'px');
+        piece.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+        piece.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        piece.style.animationDuration = (0.6 + Math.random() * 0.4) + 's';
+        burst.appendChild(piece);
+      }
+
+      setTimeout(() => burst.remove(), 1200);
+    }
+
+    /* ─────────────── PETALS ─────────────── */
+    (function spawnPetals() {
+      const container = document.getElementById('petals');
+      for (let i = 0; i < 18; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        petal.style.left     = Math.random() * 100 + 'vw';
+        petal.style.animationDuration = (6 + Math.random() * 10) + 's';
+        petal.style.animationDelay   = (Math.random() * 14) + 's';
+        petal.style.width  = (8 + Math.random() * 10) + 'px';
+        petal.style.height = (12 + Math.random() * 12) + 'px';
+        petal.style.opacity = 0;
+        const hue = 330 + Math.random() * 30;
+        petal.style.background = `radial-gradient(ellipse at 40% 30%, hsl(${hue},80%,85%), hsl(${hue},70%,60%))`;
+        container.appendChild(petal);
+      }
+    })();
+  </script>
+</body>
+</html>
